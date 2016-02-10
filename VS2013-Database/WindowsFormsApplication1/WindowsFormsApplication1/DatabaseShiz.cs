@@ -9,12 +9,19 @@ namespace WindowsFormsApplication1
 {
     class DatabaseShiz
     {
-        private const String databaseName = "CMPT491-Warehouse"; 
+        private const String databaseName = "CMPT491"; 
         private SqlConnection dbCon = null;
 
 
         public DatabaseShiz(String server, String username) {
             if (!connectDb(server, username)) throw new Exception("Failed to connect to db");
+        }
+
+        public SqlDataReader runQuery(String query) {
+
+            SqlCommand cmd = dbCon.CreateCommand();
+            cmd.CommandText = query;
+            return cmd.ExecuteReader();
         }
 
 

@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Data.SqlClient;
 
 namespace WindowsFormsApplication1
 {
@@ -35,14 +36,22 @@ namespace WindowsFormsApplication1
                 Application.Exit();
             }
 
-            TreeNode parent = new TreeNode("top level");
-            TreeNode child = new TreeNode("öption 1");
-            parent.Nodes.Add(child);
-            parent.Nodes.Add(new TreeNode("öption 2"));
-            TreeNode something = new TreeNode("level2");
-            child.Nodes.Add(something);
+            SqlDataReader reader = theDB.runQuery("SELECT * from dbo.Data$");
 
-            treeView1.Nodes.Add(parent);
+
+            TreeNode parent = new TreeNode("top level");
+            for (int i = 0; i < 20; i++)
+            {
+                if (reader.Read()) {
+                    IDataRecord data = reader;
+
+                    TreeNode temp = new TreeNode(data[2].ToString());
+                    parent.Nodes.Add(temp);
+                }
+
+            }
+
+                treeView1.Nodes.Add(parent);
             treeView1.Nodes.Add("something2");
            
         }
