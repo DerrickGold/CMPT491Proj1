@@ -7,9 +7,9 @@ def main():
 	month = ["Jan ", "Feb ", "Mar ", "Apr ", "May ", "June ", "July ", "Aug ", "Sept ", "Oct ", "Nov ", "Dec "]
 	year = 2000
 	
-	store = ["edmonton1", "edmonton2", "edmonton3", "edmonton4", "phoneix1", "phoenix1", "phoenix2", "phoenix3", "houston1", "housten2", "calgary1", "calgary2", "calgary3"]
-	storeCity = {"edmonton1":"edmonton", "edmonton2":"edmonton", "edmonton3":"edmonton", "edmonton4":"edmonton", "phoneix1":"phoenix", "phoenix1":"phoenix", "phoenix2":"phoenix", "phoenix3":"phoenix", "housten1":"housten", "housten2":"houston", "calgary1":"calgary","calgary2":"calgary","calgary3":"calgary"}
-	cityProvince = {"edmonton":"alberta","phoenix":"arizona","housten":"texas", "calgary":"alberta"}
+	store = ["edmonton1", "edmonton2", "edmonton3", "edmonton4", "phoneix1", "phoenix1", "phoenix2", "phoenix3", "houston1", "houston2", "calgary1", "calgary2", "calgary3"]
+	storeCity = {"edmonton1":"edmonton", "edmonton2":"edmonton", "edmonton3":"edmonton", "edmonton4":"edmonton", "phoneix1":"phoenix", "phoenix1":"phoenix", "phoenix2":"phoenix", "phoenix3":"phoenix", "houston1":"houston", "houston2":"houston", "calgary1":"calgary","calgary2":"calgary","calgary3":"calgary"}
+	cityProvince = {"edmonton":"alberta","phoenix":"arizona","houston":"texas", "calgary":"alberta"}
 	provinceRegion = {"alberta":"west", "arizona":"west", "texas":"south"}
 	provinceCountry = {"alberta":"canada", "arizona":"usa", "texas":"usa"}
 	
