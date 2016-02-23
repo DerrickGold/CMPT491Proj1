@@ -4,14 +4,32 @@
 import random
 
 def main():
-	month = ["Jan ", "Feb ", "Mar ", "Apr ", "May ", "June ", "July ", "Aug ", "Sept ", "Oct ", "Nov ", "Dec "]
+	month = ["Jan ", "Feb ", "Mar ", "Apr ", "May ", "June ",\
+	         "July ", "Aug ", "Sept ", "Oct ", "Nov ", "Dec "]
 	year = 2000
 	
-	store = ["edmonton1", "edmonton2", "edmonton3", "edmonton4", "phoneix1", "phoenix1", "phoenix2", "phoenix3", "houston1", "houston2", "calgary1", "calgary2", "calgary3"]
-	storeCity = {"edmonton1":"edmonton", "edmonton2":"edmonton", "edmonton3":"edmonton", "edmonton4":"edmonton", "phoneix1":"phoenix", "phoenix1":"phoenix", "phoenix2":"phoenix", "phoenix3":"phoenix", "houston1":"houston", "houston2":"houston", "calgary1":"calgary","calgary2":"calgary","calgary3":"calgary"}
-	cityProvince = {"edmonton":"alberta","phoenix":"arizona","houston":"texas", "calgary":"alberta"}
-	provinceRegion = {"alberta":"west", "arizona":"west", "texas":"south"}
-	provinceCountry = {"alberta":"canada", "arizona":"usa", "texas":"usa"}
+	store = ["edmonton1", "edmonton2", "edmonton3", "edmonton4",\
+	         "phoneix1", "phoenix2", "phoenix3", "phoenix4",\
+	         "houston1", "houston2", \
+	         "calgary1", "calgary2", "calgary3",\
+	         "oxnard1", "oxnard2",\
+	         "jersey city1", "jersey city2"]
+	storeCity = {"edmonton1":"edmonton", "edmonton2":"edmonton",\
+	             "edmonton3":"edmonton", "edmonton4":"edmonton",\
+	             "phoneix1":"phoenix", "phoenix2":"phoenix",\
+	             "phoenix3":"phoenix", "phoenix4":"phoenix",\
+	             "houston1":"houston", "houston2":"houston", \
+	             "calgary1":"calgary","calgary2":"calgary",\
+	             "calgary3":"calgary",\
+	             "oxnard1":"oxnard", "oxnard2":"oxnard",\
+	             "jersey city1":"jersey city", "jersey city2":"jersey city"}
+	cityProvince = {"edmonton":"alberta","phoenix":"arizona",\
+	                "houston":"texas", "calgary":"alberta",\
+	                "oxnard":"california", "jersey city":"new jersey"}
+	provinceRegion = {"alberta":"west", "arizona":"west", "texas":"south",\
+	                  "new jersey":"east", "california":"west"}
+	provinceCountry = {"alberta":"canada", "arizona":"usa", "texas":"usa",\
+	                   "new jersey":"usa", "california":"usa"}
 	
 	item = ["item1", "item2", "item3", "item4"]
 	itemPrice = {"item1":"price1","item2":"price2","item3":"price3","item4":"price4"}
