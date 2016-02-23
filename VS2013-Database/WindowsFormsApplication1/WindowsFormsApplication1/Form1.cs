@@ -137,7 +137,64 @@ namespace WindowsFormsApplication1
             }
 
 
+            return all;
+        }
 
+        public TreeNode makeDateTree()
+        {
+            TreeNode all = makeTypedNode("All Time", TypedNode.TYPES.ALL_TIME);
+
+            //add years
+            SqlDataReader reader = theDB.runQuery("SELECT distinct year from " + tableName + " ORDER BY year;");
+            IDataRecord data = reader;
+            while (reader.Read())
+            {
+                all.Nodes.Add(makeTypedNode(data[0].ToString(), TypedNode.TYPES.YEAR));
+            }
+            reader.Close();
+
+            //for each year, generate a quarter, and month
+            foreach (TreeNode year in all.Nodes)
+            {
+                TreeNode quarter1 = makeTypedNode("Quarter 1", TypedNode.TYPES.QUARTER);
+                quarter1.Nodes.Add(makeTypedNode("Jan", TypedNode.TYPES.MONTH));
+                quarter1.Nodes.Add(makeTypedNode("Feb", TypedNode.TYPES.MONTH));
+                quarter1.Nodes.Add(makeTypedNode("Mar", TypedNode.TYPES.MONTH));
+
+                TreeNode quarter2 = makeTypedNode("Quarter 2", TypedNode.TYPES.QUARTER);
+                quarter2.Nodes.Add(makeTypedNode("Apr", TypedNode.TYPES.MONTH));
+                quarter2.Nodes.Add(makeTypedNode("May", TypedNode.TYPES.MONTH));
+                quarter2.Nodes.Add(makeTypedNode("June", TypedNode.TYPES.MONTH));
+
+                TreeNode quarter3 = makeTypedNode("Quarter 3", TypedNode.TYPES.QUARTER);
+                quarter3.Nodes.Add(makeTypedNode("July", TypedNode.TYPES.MONTH));
+                quarter3.Nodes.Add(makeTypedNode("Aug", TypedNode.TYPES.MONTH));
+                quarter3.Nodes.Add(makeTypedNode("Sept", TypedNode.TYPES.MONTH));
+
+                TreeNode quarter4 = makeTypedNode("Quarter 4", TypedNode.TYPES.QUARTER);
+                quarter4.Nodes.Add(makeTypedNode("Oct", TypedNode.TYPES.MONTH));
+                quarter4.Nodes.Add(makeTypedNode("Nov", TypedNode.TYPES.MONTH));
+                quarter4.Nodes.Add(makeTypedNode("Dec", TypedNode.TYPES.MONTH));
+
+                year.Nodes.Add(quarter1);
+                year.Nodes.Add(quarter2);
+                year.Nodes.Add(quarter3);
+                year.Nodes.Add(quarter4);
+
+                foreach (TreeNode quart in year.Nodes)
+                {
+                    foreach (TreeNode month in quart.Nodes)
+                    {
+                        reader = theDB.runQuery("SELECT distinct day from " + tableName + " where year='" + year.Text + "' and month='" + month.Text + "';");
+                        data = reader;
+                        while (reader.Read())
+                        {
+                            month.Nodes.Add(makeTypedNode(data[0].ToString(), TypedNode.TYPES.DAY));
+                        }
+                        reader.Close();
+                    }
+                }
+            }
 
             return all;
         }
@@ -159,6 +216,7 @@ namespace WindowsFormsApplication1
             
             locationTree.Nodes.Add(makeLocationTree());
             productTree.Nodes.Add(makeItemTree());
+            dateTree.Nodes.Add(makeDateTree());
             chart1.Series.Add("test");
             chart1.Series["test"].ChartType = SeriesChartType.Bar;
             chart1.Series["test"].Points.AddXY(0, 20);

@@ -31,7 +31,7 @@
             System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
             System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
             this.locationTree = new System.Windows.Forms.TreeView();
-            this.treeView3 = new System.Windows.Forms.TreeView();
+            this.dateTree = new System.Windows.Forms.TreeView();
             this.productTree = new System.Windows.Forms.TreeView();
             this.dateTimePicker1 = new System.Windows.Forms.DateTimePicker();
             this.dateTimePicker2 = new System.Windows.Forms.DateTimePicker();
@@ -58,12 +58,12 @@
             this.locationTree.TabIndex = 0;
             this.locationTree.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
             // 
-            // treeView3
+            // dateTree
             // 
-            this.treeView3.Location = new System.Drawing.Point(395, 49);
-            this.treeView3.Name = "treeView3";
-            this.treeView3.Size = new System.Drawing.Size(173, 264);
-            this.treeView3.TabIndex = 2;
+            this.dateTree.Location = new System.Drawing.Point(395, 49);
+            this.dateTree.Name = "dateTree";
+            this.dateTree.Size = new System.Drawing.Size(173, 264);
+            this.dateTree.TabIndex = 2;
             // 
             // productTree
             // 
@@ -213,7 +213,7 @@
             this.Controls.Add(this.dateTimePicker2);
             this.Controls.Add(this.dateTimePicker1);
             this.Controls.Add(this.productTree);
-            this.Controls.Add(this.treeView3);
+            this.Controls.Add(this.dateTree);
             this.Controls.Add(this.locationTree);
             this.Name = "Form1";
             this.Text = "Data Warehouse";
@@ -226,7 +226,7 @@
         #endregion
 
         private System.Windows.Forms.TreeView locationTree;
-        private System.Windows.Forms.TreeView treeView3;
+        private System.Windows.Forms.TreeView dateTree;
         private System.Windows.Forms.TreeView productTree;
         private System.Windows.Forms.DateTimePicker dateTimePicker1;
         private System.Windows.Forms.DateTimePicker dateTimePicker2;
