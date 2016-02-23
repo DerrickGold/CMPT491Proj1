@@ -13,7 +13,10 @@ def main():
 	         "houston1", "houston2", \
 	         "calgary1", "calgary2", "calgary3",\
 	         "oxnard1", "oxnard2",\
-	         "jersey city1", "jersey city2"]
+	         "jersey city1", "jersey city2",\
+	         "montreal1","montreal2",\
+	         "vancouver1","vancouver2",\
+	         "anchorage1"]
 	storeCity = {"edmonton1":"edmonton", "edmonton2":"edmonton",\
 	             "edmonton3":"edmonton", "edmonton4":"edmonton",\
 	             "phoneix1":"phoenix", "phoenix2":"phoenix",\
@@ -22,19 +25,27 @@ def main():
 	             "calgary1":"calgary","calgary2":"calgary",\
 	             "calgary3":"calgary",\
 	             "oxnard1":"oxnard", "oxnard2":"oxnard",\
-	             "jersey city1":"jersey city", "jersey city2":"jersey city"}
+	             "jersey city1":"jersey city", "jersey city2":"jersey city",\
+	             "montreal1":"montreal","montreal2":"montreal",\
+	             "vancouver1":"vancouver","vancouver2":"vancouver",\
+	             "anchorage1":"anchorage"}
 	cityProvince = {"edmonton":"alberta","phoenix":"arizona",\
 	                "houston":"texas", "calgary":"alberta",\
-	                "oxnard":"california", "jersey city":"new jersey"}
+	                "oxnard":"california", "jersey city":"new jersey",\
+	                "montreal":"quebec","vancouver":"BC",\
+	                "anchorage":"alaska"}
 	provinceRegion = {"alberta":"west", "arizona":"west", "texas":"south",\
-	                  "new jersey":"east", "california":"west"}
+	                  "new jersey":"east", "california":"west",\
+	                  "quebec":"east", "BC":"west", "alaska":"north"}
 	provinceCountry = {"alberta":"canada", "arizona":"usa", "texas":"usa",\
-	                   "new jersey":"usa", "california":"usa"}
+	                   "new jersey":"usa", "california":"usa",\
+	                   "quebec":"canada", "BC":"canada",\
+	                   "alaska":"usa"}
 	
-	item = ["item1", "item2", "item3", "item4"]
-	itemPrice = {"item1":"price1","item2":"price2","item3":"price3","item4":"price4"}
-	itemCatagory = {"item1":"catagory1", "item2":"catagory1", "item3":"catagory2", "item4":"catagory3"}
-	catagoryDepartment = {"catagory1":"depatment1", "catagory2":"department2", "catagory3":"department2"}
+	item = ["item1", "item2", "item3", "item4", "item5", "item6", "item7", "item8", "item9", "item10"]
+	itemPrice = {"item1":"price1","item2":"price2","item3":"price3","item4":"price4","item5":"price5", "item6":"price6", "item7":"price7", "item8":"price8", "item9":"price9", "item10":"price10"}
+	itemCatagory = {"item1":"catagory1", "item2":"catagory1", "item3":"catagory2", "item4":"catagory3", "item5":"catagory3","item6":"catagory3", "item7":"catagory4", "item8":"catagory5", "item9":"catagory5","item10":"catagory5"}
+	catagoryDepartment = {"catagory1":"depatment1", "catagory2":"department2", "catagory3":"department2", "catagory4":"department3", "catagory5":"department3"}
 	monthNum = 0
 	dayNum = 1
 	saleID = 0
