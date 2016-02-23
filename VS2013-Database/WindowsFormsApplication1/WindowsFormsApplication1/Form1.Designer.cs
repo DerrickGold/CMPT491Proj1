@@ -28,11 +28,11 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
             this.locationTree = new System.Windows.Forms.TreeView();
             this.treeView3 = new System.Windows.Forms.TreeView();
-            this.treeView4 = new System.Windows.Forms.TreeView();
+            this.productTree = new System.Windows.Forms.TreeView();
             this.dateTimePicker1 = new System.Windows.Forms.DateTimePicker();
             this.dateTimePicker2 = new System.Windows.Forms.DateTimePicker();
             this.button1 = new System.Windows.Forms.Button();
@@ -65,12 +65,12 @@
             this.treeView3.Size = new System.Drawing.Size(173, 264);
             this.treeView3.TabIndex = 2;
             // 
-            // treeView4
+            // productTree
             // 
-            this.treeView4.Location = new System.Drawing.Point(209, 49);
-            this.treeView4.Name = "treeView4";
-            this.treeView4.Size = new System.Drawing.Size(168, 264);
-            this.treeView4.TabIndex = 3;
+            this.productTree.Location = new System.Drawing.Point(209, 49);
+            this.productTree.Name = "productTree";
+            this.productTree.Size = new System.Drawing.Size(168, 264);
+            this.productTree.TabIndex = 3;
             // 
             // dateTimePicker1
             // 
@@ -183,10 +183,10 @@
             // 
             // chart1
             // 
-            chartArea1.Name = "ChartArea1";
-            this.chart1.ChartAreas.Add(chartArea1);
-            legend1.Name = "Legend1";
-            this.chart1.Legends.Add(legend1);
+            chartArea2.Name = "ChartArea1";
+            this.chart1.ChartAreas.Add(chartArea2);
+            legend2.Name = "Legend1";
+            this.chart1.Legends.Add(legend2);
             this.chart1.Location = new System.Drawing.Point(225, 357);
             this.chart1.Name = "chart1";
             this.chart1.Size = new System.Drawing.Size(295, 204);
@@ -212,7 +212,7 @@
             this.Controls.Add(this.button1);
             this.Controls.Add(this.dateTimePicker2);
             this.Controls.Add(this.dateTimePicker1);
-            this.Controls.Add(this.treeView4);
+            this.Controls.Add(this.productTree);
             this.Controls.Add(this.treeView3);
             this.Controls.Add(this.locationTree);
             this.Name = "Form1";
@@ -227,7 +227,7 @@
 
         private System.Windows.Forms.TreeView locationTree;
         private System.Windows.Forms.TreeView treeView3;
-        private System.Windows.Forms.TreeView treeView4;
+        private System.Windows.Forms.TreeView productTree;
         private System.Windows.Forms.DateTimePicker dateTimePicker1;
         private System.Windows.Forms.DateTimePicker dateTimePicker2;
         private System.Windows.Forms.Button button1;

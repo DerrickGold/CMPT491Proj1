@@ -18,6 +18,13 @@ namespace WindowsFormsApplication1
         DatabaseShiz theDB = null;
         String tableName = "dbo.stores";
 
+        TreeNode makeTypedNode(String name, TypedNode.TYPES type)
+        {
+            TreeNode all = new TreeNode(name);
+            all.Tag = new TypedNode(name, type);
+            return all;
+        }
+
         TreeNode makeLocationTree()
         {
             //generate location tree
@@ -28,18 +35,15 @@ namespace WindowsFormsApplication1
             //              city
             //              store name
 
-            //start with all countries
-            TreeNode all = new TreeNode("All Location");
-
-
+            //start with all countrie            
+            TreeNode all = makeTypedNode("All Location", TypedNode.TYPES.ALL_COUNTRY);
+            //get all countries
             SqlDataReader reader = theDB.runQuery("SELECT distinct country from " + tableName);
             IDataRecord data = reader;
             while (reader.Read())
             {
-                TreeNode temp = new TreeNode(data[0].ToString());
-                all.Nodes.Add(temp);
+                all.Nodes.Add(makeTypedNode(data[0].ToString(), TypedNode.TYPES.COUNTRY));
             }
-
             reader.Close();
             //forception
             foreach (TreeNode country in all.Nodes) {
@@ -48,7 +52,7 @@ namespace WindowsFormsApplication1
                 data = reader;
                 while (reader.Read())
                 {
-                    country.Nodes.Add(data[0].ToString());
+                    country.Nodes.Add(makeTypedNode(data[0].ToString(), TypedNode.TYPES.REGION));
                 }
                 reader.Close();
                 //for each region, add a province/state
@@ -58,7 +62,7 @@ namespace WindowsFormsApplication1
                     data = reader;
                     while (reader.Read())
                     {
-                        region.Nodes.Add(data[0].ToString());
+                        region.Nodes.Add(makeTypedNode(data[0].ToString(), TypedNode.TYPES.PROVINCE));
                     }
                     reader.Close();
 
@@ -69,7 +73,7 @@ namespace WindowsFormsApplication1
                         data = reader;
                         while (reader.Read()) 
                         {
-                            province.Nodes.Add(data[0].ToString());
+                            province.Nodes.Add(makeTypedNode(data[0].ToString(), TypedNode.TYPES.CITY));
                         }
                         reader.Close();
 
@@ -80,7 +84,7 @@ namespace WindowsFormsApplication1
                             data = reader;
                             while (reader.Read())
                             {
-                                city.Nodes.Add(data[0].ToString());
+                                city.Nodes.Add(makeTypedNode(data[0].ToString(), TypedNode.TYPES.STORE));
                             }
                             reader.Close();
                         }
@@ -91,7 +95,52 @@ namespace WindowsFormsApplication1
             }
 
             return all;
-        } 
+        }
+
+
+        TreeNode makeItemTree()
+        {
+            // All Products
+            //  Department
+            //      Category
+            //          item
+            TreeNode all = makeTypedNode("All Products", TypedNode.TYPES.DEPARTMENT);
+
+            //add departments
+            SqlDataReader reader = theDB.runQuery("SELECT distinct department from " + tableName + ";");
+            IDataRecord data = reader;
+            while (reader.Read())
+            {
+                all.Nodes.Add(makeTypedNode(data[0].ToString(), TypedNode.TYPES.DEPARTMENT));
+            }
+            reader.Close();
+
+            //for each department, add a catagory
+            foreach (TreeNode department in all.Nodes) {
+                reader = theDB.runQuery("SELECT distinct catagory from " + tableName + " where department = '" + department.Text + "';");
+                data = reader;
+                while (reader.Read())
+                {
+                    department.Nodes.Add(makeTypedNode(data[0].ToString(), TypedNode.TYPES.CATAGORY));
+                }
+                reader.Close();
+                //for each catagory, add items
+                foreach (TreeNode catagory in department.Nodes) {
+                    reader = theDB.runQuery("SELECT distinct item from " + tableName + " where catagory = '" + catagory.Text + "';");
+                    data = reader;
+                    while (reader.Read()) {
+                        catagory.Nodes.Add(makeTypedNode(data[0].ToString(), TypedNode.TYPES.ITEM));
+                    }
+                    reader.Close();
+
+                }
+            }
+
+
+
+
+            return all;
+        }
         public Form1()
         {
             InitializeComponent();
@@ -109,6 +158,7 @@ namespace WindowsFormsApplication1
 
             
             locationTree.Nodes.Add(makeLocationTree());
+            productTree.Nodes.Add(makeItemTree());
             chart1.Series.Add("test");
             chart1.Series["test"].ChartType = SeriesChartType.Bar;
             chart1.Series["test"].Points.AddXY(0, 20);
