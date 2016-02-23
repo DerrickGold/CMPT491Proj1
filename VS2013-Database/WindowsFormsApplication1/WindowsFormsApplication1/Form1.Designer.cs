@@ -28,6 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
             this.treeView1 = new System.Windows.Forms.TreeView();
             this.treeView3 = new System.Windows.Forms.TreeView();
             this.treeView4 = new System.Windows.Forms.TreeView();
@@ -44,6 +46,8 @@
             this.label7 = new System.Windows.Forms.Label();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.textBox2 = new System.Windows.Forms.TextBox();
+            this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
+            ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
             this.SuspendLayout();
             // 
             // treeView1
@@ -177,11 +181,24 @@
             this.textBox2.Size = new System.Drawing.Size(133, 20);
             this.textBox2.TabIndex = 21;
             // 
+            // chart1
+            // 
+            chartArea1.Name = "ChartArea1";
+            this.chart1.ChartAreas.Add(chartArea1);
+            legend1.Name = "Legend1";
+            this.chart1.Legends.Add(legend1);
+            this.chart1.Location = new System.Drawing.Point(225, 357);
+            this.chart1.Name = "chart1";
+            this.chart1.Size = new System.Drawing.Size(295, 204);
+            this.chart1.TabIndex = 22;
+            this.chart1.Text = "chart1";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(734, 492);
+            this.ClientSize = new System.Drawing.Size(734, 573);
+            this.Controls.Add(this.chart1);
             this.Controls.Add(this.textBox2);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.label7);
@@ -200,6 +217,7 @@
             this.Controls.Add(this.treeView1);
             this.Name = "Form1";
             this.Text = "Data Warehouse";
+            ((System.ComponentModel.ISupportInitialize)(this.chart1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -223,6 +241,7 @@
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.DataVisualization.Charting.Chart chart1;
 
     }
 }
