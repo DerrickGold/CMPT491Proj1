@@ -42,10 +42,18 @@ def main():
 	                   "quebec":"canada", "BC":"canada",\
 	                   "alaska":"usa"}
 	
-	item = ["item1", "item2", "item3", "item4", "item5", "item6", "item7", "item8", "item9", "item10"]
-	itemPrice = {"item1":"price1","item2":"price2","item3":"price3","item4":"price4","item5":"price5", "item6":"price6", "item7":"price7", "item8":"price8", "item9":"price9", "item10":"price10"}
-	itemCatagory = {"item1":"catagory1", "item2":"catagory1", "item3":"catagory2", "item4":"catagory3", "item5":"catagory3","item6":"catagory3", "item7":"catagory4", "item8":"catagory5", "item9":"catagory5","item10":"catagory5"}
-	catagoryDepartment = {"catagory1":"depatment1", "catagory2":"department2", "catagory3":"department2", "catagory4":"department3", "catagory5":"department3"}
+	item = ["mud", "street", "sledge", "claw", "finishing", "one inch",\
+	        "oak", "base", "basket", "foot"]
+	itemPrice = {"mud":"150","street":"100","sledge":"70","claw":"20",\
+	             "finishing":"5", "one inch":"10", "oak":"25", "base":"5",\
+	             "basket":"15", "foot":"15"}
+	itemCatagory = {"mud":"tire", "street":"tire", "sledge":"hammer",\
+	                "claw":"hammer", "finishing":"nail","one inch":"nail",\
+	                "oak":"bat", "base":"ball",\
+	                "basket":"ball","foot":"ball"}
+	catagoryDepartment = {"tire":"automotive", "hammer":"hardware",\
+	                      "nail":"hardware", "bat":"sporting",\
+	                      "ball":"sporting"}
 	monthNum = 0
 	dayNum = 1
 	saleID = 0
@@ -54,10 +62,18 @@ def main():
 			i = random.randint(0, len(store)-1)
 			for transactionID in range(1, random.randint(1,10)):
 				j = random.randint(0, len(item)-1)
-				print(str(saleID) +", "+ str(transactionID) +", ",end ="")
-				print(month[monthNum] +" "+ str(dayNum) +" "+ str(year) +", ",end="")
-				print(store[i] +", "+ storeCity[store[i]] +", "+ cityProvince[storeCity[store[i]]] +", "+ provinceRegion[cityProvince[storeCity[store[i]]]] +", "+ provinceCountry[cityProvince[storeCity[store[i]]]] +", ",end="")
-				print(item[j] +", "+ itemPrice[item[j]] +", "+ itemCatagory[item[j]] +", "+ catagoryDepartment[itemCatagory[item[j]]])
+				print(str(saleID) +", "+ str(transactionID)\
+				      +", ",end ="")
+				print(month[monthNum] +" "+ str(dayNum)\
+				      +" "+ str(year) +", ",end="")
+				print(store[i] +", "+ storeCity[store[i]] \
+				      +", "+ cityProvince[storeCity[store[i]]]\
+				      +", "+ provinceRegion[cityProvince[storeCity[store[i]]]] \
+				      +", "+ provinceCountry[cityProvince[storeCity[store[i]]]]\
+				      +", ",end="")
+				print(item[j] +", "+ itemPrice[item[j]] +", "+ \
+				      itemCatagory[item[j]] +", "+ \
+				      catagoryDepartment[itemCatagory[item[j]]])
 			saleID+=1	
 		if monthNum in [3,5,8,10] and dayNum == 30:
 			monthNum+=1
