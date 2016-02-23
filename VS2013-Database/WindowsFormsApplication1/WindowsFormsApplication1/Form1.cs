@@ -15,20 +15,90 @@ namespace WindowsFormsApplication1
 
     public partial class Form1 : Form
     {
-        public void connectDB()
+        DatabaseShiz theDB = null;
+        String tableName = "dbo.stores";
+
+        TreeNode makeLocationTree()
         {
-            
-        }
-        
+            //generate location tree
+            // All Countries
+            //  Countries
+            //      region
+            //          province
+            //              city
+            //              store name
+
+            //start with all countries
+            TreeNode all = new TreeNode("All Location");
+
+
+            SqlDataReader reader = theDB.runQuery("SELECT distinct country from " + tableName);
+            IDataRecord data = reader;
+            while (reader.Read())
+            {
+                TreeNode temp = new TreeNode(data[0].ToString());
+                all.Nodes.Add(temp);
+            }
+
+            reader.Close();
+            //forception
+            foreach (TreeNode country in all.Nodes) {
+                //get all regions for a country
+                reader = theDB.runQuery("SELECT distinct region from " + tableName + " where country = '" + country.Text + "';");
+                data = reader;
+                while (reader.Read())
+                {
+                    country.Nodes.Add(data[0].ToString());
+                }
+                reader.Close();
+                //for each region, add a province/state
+                foreach (TreeNode region in country.Nodes)
+                {
+                    reader = theDB.runQuery("SELECT distinct province from " + tableName + " where region = '" + region.Text + "' and country = '" + country.Text + "';");
+                    data = reader;
+                    while (reader.Read())
+                    {
+                        region.Nodes.Add(data[0].ToString());
+                    }
+                    reader.Close();
+
+                    //for each province, get a city name
+                    foreach (TreeNode province in region.Nodes)
+                    {
+                        reader = theDB.runQuery("SELECT distinct city from " + tableName + " where province = '" + province.Text + "';");
+                        data = reader;
+                        while (reader.Read()) 
+                        {
+                            province.Nodes.Add(data[0].ToString());
+                        }
+                        reader.Close();
+
+                        //for each City, get store names
+                        foreach (TreeNode city in province.Nodes)
+                        {
+                            reader = theDB.runQuery("SELECT distinct storename from " + tableName + " where city = '" + city.Text + "';");
+                            data = reader;
+                            while (reader.Read())
+                            {
+                                city.Nodes.Add(data[0].ToString());
+                            }
+                            reader.Close();
+                        }
+                    }
+                }
+ 
+
+            }
+
+            return all;
+        } 
         public Form1()
         {
             InitializeComponent();
 
-            DatabaseShiz theDB = null;
-
             try
             {
-                theDB = new DatabaseShiz("COMPSCI-PC", "compsci");
+                theDB = new DatabaseShiz("COMPSCI-PC", "CMPT491-Warehouse", "compsci");
                 MessageBox.Show("Connected to database.");
             }
             catch (Exception e)
@@ -37,24 +107,8 @@ namespace WindowsFormsApplication1
                 Application.Exit();
             }
 
-            SqlDataReader reader = theDB.runQuery("SELECT * from dbo.Data$");
-
-
-            TreeNode parent = new TreeNode("top level");
-            for (int i = 0; i < 20; i++)
-            {
-                if (reader.Read()) {
-                    IDataRecord data = reader;
-
-                    TreeNode temp = new TreeNode(data[2].ToString());
-                    parent.Nodes.Add(temp);
-                }
-
-            }
-
-                treeView1.Nodes.Add(parent);
-            treeView1.Nodes.Add("something2");
-
+            
+            locationTree.Nodes.Add(makeLocationTree());
             chart1.Series.Add("test");
             chart1.Series["test"].ChartType = SeriesChartType.Bar;
             chart1.Series["test"].Points.AddXY(0, 20);

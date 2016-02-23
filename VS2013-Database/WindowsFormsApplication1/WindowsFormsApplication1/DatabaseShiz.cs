@@ -4,32 +4,45 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Data.SqlClient;
+using System.Data;
 
 namespace WindowsFormsApplication1
 {
     class DatabaseShiz
     {
-        private const String databaseName = "CMPT491"; 
         private SqlConnection dbCon = null;
+        private SqlDataReader reader = null;
 
+        public delegate void  ForEachResult(IDataRecord data);
 
-        public DatabaseShiz(String server, String username) {
-            if (!connectDb(server, username)) throw new Exception("Failed to connect to db");
+        public DatabaseShiz(String server, String dbName, String username) {
+            if (!connectDb(server, dbName, username)) throw new Exception("Failed to connect to db");
         }
 
         public SqlDataReader runQuery(String query) {
 
             SqlCommand cmd = dbCon.CreateCommand();
             cmd.CommandText = query;
-            return cmd.ExecuteReader();
+            reader = cmd.ExecuteReader();
+            return reader;
+        }
+
+        public void forEachResult( ForEachResult fn) {
+            IDataRecord data = reader;
+            while (reader.Read())
+            {
+                fn(data);
+            }
+
+            reader.Close();
         }
 
 
-        private bool connectDb(String server, String username) {
+        private bool connectDb(String server,String dbName, String username) {
             String conStr = "server="+ server +";" +
                 "Trusted_Connection=yes;" +
                 "User ID="+username+";" +
-                "database="+databaseName+";";
+                "database="+dbName+";";
 
             dbCon = new SqlConnection(conStr);
             try

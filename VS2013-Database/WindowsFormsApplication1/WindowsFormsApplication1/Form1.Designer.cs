@@ -30,7 +30,7 @@
         {
             System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
             System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            this.treeView1 = new System.Windows.Forms.TreeView();
+            this.locationTree = new System.Windows.Forms.TreeView();
             this.treeView3 = new System.Windows.Forms.TreeView();
             this.treeView4 = new System.Windows.Forms.TreeView();
             this.dateTimePicker1 = new System.Windows.Forms.DateTimePicker();
@@ -50,13 +50,13 @@
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
             this.SuspendLayout();
             // 
-            // treeView1
+            // locationTree
             // 
-            this.treeView1.Location = new System.Drawing.Point(27, 49);
-            this.treeView1.Name = "treeView1";
-            this.treeView1.Size = new System.Drawing.Size(163, 264);
-            this.treeView1.TabIndex = 0;
-            this.treeView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
+            this.locationTree.Location = new System.Drawing.Point(27, 49);
+            this.locationTree.Name = "locationTree";
+            this.locationTree.Size = new System.Drawing.Size(163, 264);
+            this.locationTree.TabIndex = 0;
+            this.locationTree.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
             // 
             // treeView3
             // 
@@ -214,7 +214,7 @@
             this.Controls.Add(this.dateTimePicker1);
             this.Controls.Add(this.treeView4);
             this.Controls.Add(this.treeView3);
-            this.Controls.Add(this.treeView1);
+            this.Controls.Add(this.locationTree);
             this.Name = "Form1";
             this.Text = "Data Warehouse";
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).EndInit();
@@ -225,7 +225,7 @@
 
         #endregion
 
-        private System.Windows.Forms.TreeView treeView1;
+        private System.Windows.Forms.TreeView locationTree;
         private System.Windows.Forms.TreeView treeView3;
         private System.Windows.Forms.TreeView treeView4;
         private System.Windows.Forms.DateTimePicker dateTimePicker1;
