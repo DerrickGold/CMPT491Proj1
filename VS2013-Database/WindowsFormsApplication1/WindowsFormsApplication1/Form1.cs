@@ -18,10 +18,13 @@ namespace WindowsFormsApplication1
         DatabaseShiz theDB = null;
         String tableName = "dbo.stores";
 
-        TreeNode makeTypedNode(String name, TypedNode.TYPES type)
+        TreeNode makeTypedNode(String name, TypedNode.TYPES type, TreeNode parent)
         {
             TreeNode all = new TreeNode(name);
-            all.Tag = new TypedNode(name, type);
+            TypedNode nodeType = new TypedNode(name, type, parent);
+            nodeType.setRefNode(all);
+            all.Tag = nodeType;
+            
             return all;
         }
 
@@ -36,57 +39,46 @@ namespace WindowsFormsApplication1
             //              store name
 
             //start with all countrie            
-            TreeNode all = makeTypedNode("All Location", TypedNode.TYPES.ALL_COUNTRY);
+            TreeNode all = makeTypedNode("All Location", TypedNode.TYPES.ALL_COUNTRY, null);
             //get all countries
-            SqlDataReader reader = theDB.runQuery("SELECT distinct country from " + tableName);
-            IDataRecord data = reader;
-            while (reader.Read())
+            theDB.runQuery("SELECT distinct country from " + tableName);
+            theDB.forEachResult((IDataRecord data) =>
             {
-                all.Nodes.Add(makeTypedNode(data[0].ToString(), TypedNode.TYPES.COUNTRY));
-            }
-            reader.Close();
+                all.Nodes.Add(makeTypedNode(data[0].ToString(), TypedNode.TYPES.COUNTRY, all));
+            });
             //forception
             foreach (TreeNode country in all.Nodes) {
                 //get all regions for a country
-                reader = theDB.runQuery("SELECT distinct region from " + tableName + " where country = '" + country.Text + "';");
-                data = reader;
-                while (reader.Read())
+                theDB.runQuery("SELECT distinct region from " + tableName + " where country = '" + country.Text + "';");
+                theDB.forEachResult((IDataRecord data) =>
                 {
-                    country.Nodes.Add(makeTypedNode(data[0].ToString(), TypedNode.TYPES.REGION));
-                }
-                reader.Close();
+                    country.Nodes.Add(makeTypedNode(data[0].ToString(), TypedNode.TYPES.REGION, country));
+                });
                 //for each region, add a province/state
                 foreach (TreeNode region in country.Nodes)
                 {
-                    reader = theDB.runQuery("SELECT distinct province from " + tableName + " where region = '" + region.Text + "' and country = '" + country.Text + "';");
-                    data = reader;
-                    while (reader.Read())
+                    theDB.runQuery("SELECT distinct province from " + tableName + " where region = '" + region.Text + "' and country = '" + country.Text + "';");
+                    theDB.forEachResult((IDataRecord data) =>
                     {
-                        region.Nodes.Add(makeTypedNode(data[0].ToString(), TypedNode.TYPES.PROVINCE));
-                    }
-                    reader.Close();
-
+                        region.Nodes.Add(makeTypedNode(data[0].ToString(), TypedNode.TYPES.PROVINCE, region));
+                    });
                     //for each province, get a city name
                     foreach (TreeNode province in region.Nodes)
                     {
-                        reader = theDB.runQuery("SELECT distinct city from " + tableName + " where province = '" + province.Text + "';");
-                        data = reader;
-                        while (reader.Read()) 
+                        theDB.runQuery("SELECT distinct city from " + tableName + " where province = '" + province.Text + "';");
+                        theDB.forEachResult((IDataRecord data) =>
                         {
-                            province.Nodes.Add(makeTypedNode(data[0].ToString(), TypedNode.TYPES.CITY));
-                        }
-                        reader.Close();
+                            province.Nodes.Add(makeTypedNode(data[0].ToString(), TypedNode.TYPES.CITY, province));
+                        });
 
                         //for each City, get store names
                         foreach (TreeNode city in province.Nodes)
                         {
-                            reader = theDB.runQuery("SELECT distinct storename from " + tableName + " where city = '" + city.Text + "';");
-                            data = reader;
-                            while (reader.Read())
+                            theDB.runQuery("SELECT distinct storename from " + tableName + " where city = '" + city.Text + "';");
+                            theDB.forEachResult((IDataRecord data) =>
                             {
-                                city.Nodes.Add(makeTypedNode(data[0].ToString(), TypedNode.TYPES.STORE));
-                            }
-                            reader.Close();
+                                city.Nodes.Add(makeTypedNode(data[0].ToString(), TypedNode.TYPES.STORE, city));
+                            });
                         }
                     }
                 }
@@ -104,35 +96,29 @@ namespace WindowsFormsApplication1
             //  Department
             //      Category
             //          item
-            TreeNode all = makeTypedNode("All Products", TypedNode.TYPES.DEPARTMENT);
+            TreeNode all = makeTypedNode("All Products", TypedNode.TYPES.ALL_DEPARTMENT, null);
 
             //add departments
-            SqlDataReader reader = theDB.runQuery("SELECT distinct department from " + tableName + ";");
-            IDataRecord data = reader;
-            while (reader.Read())
+            theDB.runQuery("SELECT distinct department from " + tableName + ";");
+            theDB.forEachResult((IDataRecord data) =>
             {
-                all.Nodes.Add(makeTypedNode(data[0].ToString(), TypedNode.TYPES.DEPARTMENT));
-            }
-            reader.Close();
+                all.Nodes.Add(makeTypedNode(data[0].ToString(), TypedNode.TYPES.DEPARTMENT, all));
+            });
 
             //for each department, add a catagory
             foreach (TreeNode department in all.Nodes) {
-                reader = theDB.runQuery("SELECT distinct catagory from " + tableName + " where department = '" + department.Text + "';");
-                data = reader;
-                while (reader.Read())
+                theDB.runQuery("SELECT distinct catagory from " + tableName + " where department = '" + department.Text + "';");
+                theDB.forEachResult((IDataRecord data) =>
                 {
-                    department.Nodes.Add(makeTypedNode(data[0].ToString(), TypedNode.TYPES.CATAGORY));
-                }
-                reader.Close();
+                    department.Nodes.Add(makeTypedNode(data[0].ToString(), TypedNode.TYPES.CATAGORY, department));
+                });
                 //for each catagory, add items
                 foreach (TreeNode catagory in department.Nodes) {
-                    reader = theDB.runQuery("SELECT distinct item from " + tableName + " where catagory = '" + catagory.Text + "';");
-                    data = reader;
-                    while (reader.Read()) {
-                        catagory.Nodes.Add(makeTypedNode(data[0].ToString(), TypedNode.TYPES.ITEM));
-                    }
-                    reader.Close();
-
+                    theDB.runQuery("SELECT distinct item from " + tableName + " where catagory = '" + catagory.Text + "';");
+                    theDB.forEachResult((IDataRecord data) =>
+                    {
+                        catagory.Nodes.Add(makeTypedNode(data[0].ToString(), TypedNode.TYPES.ITEM, catagory));
+                    });
                 }
             }
 
@@ -142,39 +128,37 @@ namespace WindowsFormsApplication1
 
         public TreeNode makeDateTree()
         {
-            TreeNode all = makeTypedNode("All Time", TypedNode.TYPES.ALL_TIME);
+            TreeNode all = makeTypedNode("All Time", TypedNode.TYPES.ALL_TIME, null);
 
             //add years
-            SqlDataReader reader = theDB.runQuery("SELECT distinct year from " + tableName + " ORDER BY year;");
-            IDataRecord data = reader;
-            while (reader.Read())
+            theDB.runQuery("SELECT distinct year from " + tableName + " ORDER BY year;");
+            theDB.forEachResult((IDataRecord data) =>
             {
-                all.Nodes.Add(makeTypedNode(data[0].ToString(), TypedNode.TYPES.YEAR));
-            }
-            reader.Close();
+                all.Nodes.Add(makeTypedNode(data[0].ToString(), TypedNode.TYPES.YEAR, all));
+            });
 
             //for each year, generate a quarter, and month
             foreach (TreeNode year in all.Nodes)
             {
-                TreeNode quarter1 = makeTypedNode("Quarter 1", TypedNode.TYPES.QUARTER);
-                quarter1.Nodes.Add(makeTypedNode("Jan", TypedNode.TYPES.MONTH));
-                quarter1.Nodes.Add(makeTypedNode("Feb", TypedNode.TYPES.MONTH));
-                quarter1.Nodes.Add(makeTypedNode("Mar", TypedNode.TYPES.MONTH));
+                TreeNode quarter1 = makeTypedNode("Quarter 1", TypedNode.TYPES.QUARTER, year);
+                quarter1.Nodes.Add(makeTypedNode("Jan", TypedNode.TYPES.MONTH, quarter1));
+                quarter1.Nodes.Add(makeTypedNode("Feb", TypedNode.TYPES.MONTH, quarter1));
+                quarter1.Nodes.Add(makeTypedNode("Mar", TypedNode.TYPES.MONTH, quarter1));
 
-                TreeNode quarter2 = makeTypedNode("Quarter 2", TypedNode.TYPES.QUARTER);
-                quarter2.Nodes.Add(makeTypedNode("Apr", TypedNode.TYPES.MONTH));
-                quarter2.Nodes.Add(makeTypedNode("May", TypedNode.TYPES.MONTH));
-                quarter2.Nodes.Add(makeTypedNode("Jun", TypedNode.TYPES.MONTH));
+                TreeNode quarter2 = makeTypedNode("Quarter 2", TypedNode.TYPES.QUARTER, year);
+                quarter2.Nodes.Add(makeTypedNode("Apr", TypedNode.TYPES.MONTH, quarter2));
+                quarter2.Nodes.Add(makeTypedNode("May", TypedNode.TYPES.MONTH, quarter2));
+                quarter2.Nodes.Add(makeTypedNode("Jun", TypedNode.TYPES.MONTH, quarter2));
 
-                TreeNode quarter3 = makeTypedNode("Quarter 3", TypedNode.TYPES.QUARTER);
-                quarter3.Nodes.Add(makeTypedNode("Jul", TypedNode.TYPES.MONTH));
-                quarter3.Nodes.Add(makeTypedNode("Aug", TypedNode.TYPES.MONTH));
-                quarter3.Nodes.Add(makeTypedNode("Sep", TypedNode.TYPES.MONTH));
+                TreeNode quarter3 = makeTypedNode("Quarter 3", TypedNode.TYPES.QUARTER, year);
+                quarter3.Nodes.Add(makeTypedNode("Jul", TypedNode.TYPES.MONTH, quarter3));
+                quarter3.Nodes.Add(makeTypedNode("Aug", TypedNode.TYPES.MONTH, quarter3));
+                quarter3.Nodes.Add(makeTypedNode("Sep", TypedNode.TYPES.MONTH, quarter3));
 
-                TreeNode quarter4 = makeTypedNode("Quarter 4", TypedNode.TYPES.QUARTER);
-                quarter4.Nodes.Add(makeTypedNode("Oct", TypedNode.TYPES.MONTH));
-                quarter4.Nodes.Add(makeTypedNode("Nov", TypedNode.TYPES.MONTH));
-                quarter4.Nodes.Add(makeTypedNode("Dec", TypedNode.TYPES.MONTH));
+                TreeNode quarter4 = makeTypedNode("Quarter 4", TypedNode.TYPES.QUARTER, year);
+                quarter4.Nodes.Add(makeTypedNode("Oct", TypedNode.TYPES.MONTH, quarter4));
+                quarter4.Nodes.Add(makeTypedNode("Nov", TypedNode.TYPES.MONTH, quarter4));
+                quarter4.Nodes.Add(makeTypedNode("Dec", TypedNode.TYPES.MONTH, quarter4));
 
                 year.Nodes.Add(quarter1);
                 year.Nodes.Add(quarter2);
@@ -185,13 +169,10 @@ namespace WindowsFormsApplication1
                 {
                     foreach (TreeNode month in quart.Nodes)
                     {
-                        reader = theDB.runQuery("SELECT distinct day from " + tableName + " where year='" + year.Text + "' and month='" + month.Text + "';");
-                        data = reader;
-                        while (reader.Read())
-                        {
-                            month.Nodes.Add(makeTypedNode(data[0].ToString(), TypedNode.TYPES.DAY));
-                        }
-                        reader.Close();
+                        theDB.runQuery("SELECT distinct day from " + tableName + " where year='" + year.Text + "' and month='" + month.Text + "';");
+                        theDB.forEachResult((IDataRecord data) => {
+                            month.Nodes.Add(makeTypedNode(data[0].ToString(), TypedNode.TYPES.DAY, month));
+                        });
                     }
                 }
             }
@@ -204,7 +185,8 @@ namespace WindowsFormsApplication1
 
             try
             {
-                theDB = new DatabaseShiz("CURTIS_PC\\SQLEXPRESS", "CMPT491-Warehouse", "Curtis");
+                //theDB = new DatabaseShiz("CURTIS_PC\\SQLEXPRESS", "CMPT491-Warehouse", "Curtis");
+                theDB = new DatabaseShiz("COMPSCI-PC", "CMPT491-Warehouse", "compsci");
                 MessageBox.Show("Connected to database.");
             }
             catch (Exception e)
@@ -253,95 +235,91 @@ namespace WindowsFormsApplication1
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //Assigning Date
-            int year = 0;
-            string month;
-            TreeNode node = dateTree.SelectedNode;
-            if (node.Text.Length == 3){
-                month = node.Text;
-                year = Int32.Parse(node.Parent.Parent.Text);
-            }
-            if (node.Text.Length == 4)
-            {
-                year = Int32.Parse(node.Text);
-            }
-            if (node.Text.Length == 9){
-                if (node.Text == "Quarter 1")
-                {
-                    month = "Jan Feb Mar";
-                }
-                if (node.Text == "Quarter 2")
-                {
-                    month = "Apr May Jun";
-                }
-                if (node.Text == "Quarter 3")
-                {
-                    month = "Jul Aug Sep";
-                }
-                if (node.Text == "Quarter 4")
-                {
-                    month = "Oct Nov Dec";
-                }
-                year = Int32.Parse(node.Parent.Text);
-            }
-            
-            //assigning Items
-            string department = "no";
-            string cat = "no";
-            string item = "no";
-            TreeNode node1 = productTree.SelectedNode;
-            if (node1.Level == 1)
-            {
-                node1.Text = department;
-            }
-            if (node1.Level == 2)
-            {
-                node1.Text = cat;
-                node1.Parent.Text = department;
-            } 
-            if (node1.Level == 3)
-            {
-                node1.Text = item;
-                node1.Parent.Text = cat;
-                node1.Parent.Parent.Text = department;
-            }
-            string country = "no";
-            string region = "no";
-            string prov = "no";
-            string city = "no";
-            string store = "no";
-            TreeNode node2 = productTree.SelectedNode;
-            if (node2.Level == 1)
-            {
-                country = node2.Text;
-            }
-            if (node2.Level == 2)
-            {
-                region = node2.Text;
-                country = node2.Parent.Text;
-            }
-            if (node2.Level == 3)
-            {
-                prov = node2.Text;
-                region = node2.Parent.Text;
-                country = node2.Parent.Parent.Text;
-            }
-            if (node2.Level == 4)
-            {
-                city = node2.Text;
-                prov = node2.Parent.Text;
-                region = node2.Parent.Parent.Text;
-                country = node2.Parent.Parent.Parent.Text;
-            }
-            if (node2.Level == 5)
-            {
-                store = node2.Text;
-                city = node2.Parent.Text;
-                prov = node2.Parent.Parent.Text;
-                region = node2.Parent.Parent.Parent.Text;
-                country = node2.Parent.Parent.Parent.Parent.Text;
-            }
+            //query parameters
+            int year = 0, day = 0;
+            String month = "";
+            String department = null, catagory = null, item = null;
+            String country = null, region = null, province = null, city = null, store = null;
 
+            //Assigning Date
+            //Trace the parents of each selected node to get contextual details
+            TreeNode node = dateTree.SelectedNode;
+            TypedNode type = (TypedNode)dateTree.SelectedNode.Tag;
+            List<TypedNode> dateParents = type.getParents();
+            foreach (TypedNode t in dateParents)
+            {
+                switch (t.getType())
+                {
+                    case TypedNode.TYPES.YEAR:
+                        year = Int32.Parse(t.getName());
+                        break;
+                    case TypedNode.TYPES.MONTH:
+                        month = t.getName();
+                        break;
+                    case TypedNode.TYPES.QUARTER:
+                        //only add quarter months if month is not set
+                        if (month.Length > 0) break;
+
+                        TreeNode reference = t.getRefNode();
+                        //hree months in a quarter, pretty static
+                        month = "" + reference.Nodes[0].Text + " " + reference.Nodes[1].Text + " " 
+                            + reference.Nodes[2].Text;
+                        break;
+                    case TypedNode.TYPES.DAY:
+                        day = Int32.Parse(t.getName());
+                        break;
+                }
+            }
+            Console.WriteLine("Year: " + year + " Months: " + month);
+
+            //get the selected item details
+            
+            type = (TypedNode)productTree.SelectedNode.Tag;
+            List<TypedNode> itemParents = type.getParents();
+            foreach (TypedNode t in itemParents)
+            {
+                switch (t.getType())
+                {
+                    case TypedNode.TYPES.DEPARTMENT:
+                        department = t.getName();
+                        break;
+                    case TypedNode.TYPES.CATAGORY:
+                        catagory = t.getName();
+                        break;
+                    case TypedNode.TYPES.ITEM:
+                        item = t.getName();
+                        break;
+                }
+            }
+            Console.WriteLine("Dept.: " + department + " Catagory: " + catagory + " Item: " + item);
+
+
+            //get location
+            type = (TypedNode)locationTree.SelectedNode.Tag;
+            List<TypedNode> locationParents = type.getParents();
+            foreach (TypedNode t in locationParents)
+            {
+                switch (t.getType())
+                {
+                    case TypedNode.TYPES.COUNTRY:
+                        country = t.getName();
+                        break;
+                    case TypedNode.TYPES.REGION:
+                        region = t.getName();
+                        break;
+                    case TypedNode.TYPES.PROVINCE:
+                        province = t.getName();
+                        break;
+                    case TypedNode.TYPES.CITY:
+                        city = t.getName();
+                        break;
+                    case TypedNode.TYPES.STORE:
+                        store = t.getName();
+                        break;
+                }
+            }
+            Console.WriteLine("Country: " + country + " Region: " + region + " Province: " + province
+                + " City: " + city + " Store: " + store);
         }
 
         private void dateTree_AfterSelect(object sender, TreeViewEventArgs e)
