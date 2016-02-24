@@ -215,11 +215,13 @@ namespace WindowsFormsApplication1
             var locInfo = getSelectedLocationTree();
 
 
-            String output = "\n---" + 
-                results + "\n|" + timeInfoString(dateInfo) +
-                "\n|" + itemInfoString(itemInfo) +
-                "\n---";
-            richTextBox1.Text += output;
+            String output =
+                results + 
+                "\n" + timeInfoString(dateInfo) +
+                "\n" + itemInfoString(itemInfo) +
+                "\n" + locationInfoString(locInfo) +
+                "\n---------------------------------------------\n";
+            richTextBox1.Text = output + richTextBox1.Text;
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -231,7 +233,7 @@ namespace WindowsFormsApplication1
                 //populate some text boxes
                 String unitsSold = data[0].ToString();
                 String dollars = data[1].ToString();
-                logQuery("Dollars In: " + dollars + " Units Out: " + unitsSold);
+                logQuery("Dollars In: " + dollars + "\nUnits Out: " + unitsSold);
             });
 
         }
@@ -471,6 +473,9 @@ namespace WindowsFormsApplication1
             if (catagory != null)
                 output += " for " + catagory + " catagory ";
 
+            if (output.Length == 0)
+                output += "All Items";
+
 
             return output;
         }
@@ -507,6 +512,35 @@ namespace WindowsFormsApplication1
             return new Tuple<String, String, String, String, String>(country, region, province, city, store);
         }
 
+        public String locationInfoString(Tuple<String, String, String, String, String> info)
+        {
+            String output = "";
+
+            String store = info.Item5;
+            String city = info.Item4;
+            if (store != null)
+                output += " @ " + store + "in " + city;
+            else if (city != null)
+                output += city;
+
+            String province = info.Item3;
+            if (province != null)
+                output += " in " + province;
+
+            String country = info.Item1;
+            String region = info.Item2;
+            if (region != null)
+                output += ", " + region + "en " + country + ", ";
+            
+            else if (country != null)
+                output += ", " + country + " ";
+           
+            if (output.Length == 0)
+                output = "All Locations";
+
+            return output;
+        }
+
         private void dateTree_AfterSelect(object sender, TreeViewEventArgs e)
         {
 
@@ -520,6 +554,11 @@ namespace WindowsFormsApplication1
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
 
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            richTextBox1.Clear();
         }
 
     }
