@@ -223,6 +223,20 @@ namespace WindowsFormsApplication1
 
         }
 
+        private void button1_Click(object sender, EventArgs e)
+        {
+            //run filterd query with this select statement
+            runFilteredQuery("SELECT COUNT(sale_id), SUM(price)", (IDataRecord data) =>
+            {
+                //for each row of the result (only one for this query),
+                //populate some text boxes
+                textBox1.Text = data[0].ToString();
+                textBox2.Text = data[1].ToString();
+            });
+
+        }
+
+
         private void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
         {
 
@@ -233,18 +247,132 @@ namespace WindowsFormsApplication1
 
         }
 
-        private void button1_Click(object sender, EventArgs e)
+
+        private void runFilteredQuery(String selectStmt, DatabaseShiz.ForEachResult onResult)
         {
-            //query parameters
-            int year = 0, day = 0;
+            //get the selected item details
+            var dateInfo = getSelectedDateTree();
+            var itemInfo = getSelectedItemTree();
+            var locInfo = getSelectedLocationTree();
+
+
+            //Get total sales
+            String queryStr = selectStmt + " from " + tableName + " where ";
+            //set time filter
+            queryStr += generateTimeFilter(dateInfo);
+            queryStr += generateItemFilter(itemInfo);
+            queryStr += generateLocationFilter(locInfo);
+            queryStr = finalizeQuery(queryStr);
+
+            Console.WriteLine(queryStr);
+            theDB.runQuery(queryStr);
+            theDB.forEachResult(onResult);
+        }
+
+        private String removeTrailingDelim(String delim, String input)
+        {
+            String output = input;
+            if (output.LastIndexOf(delim) == output.Length - delim.Length)
+                output = output.Substring(0, output.Length - delim.Length);
+
+            return output;
+        }
+
+        public String finalizeQuery(String query)
+        {
+            String newQuery = query;
+            //remove trailing 'and'
+            newQuery = removeTrailingDelim(" and ", newQuery);
+            //remove trailling 'where'
+            newQuery = removeTrailingDelim(" where ", newQuery);
+            //remove trailing 'or'
+            newQuery = removeTrailingDelim(" or ", newQuery);
+            newQuery += ";";
+            return newQuery;
+        }
+
+        public String generateTimeFilter(Tuple<int, String, String[], int> info)
+        {
+            int year=info.Item1; 
+            String month = info.Item2;
+            String[] monthList = info.Item3;
+            int day = info.Item4;
+
+            String filterStr = "";
+            //set date filters
+            if (year > 0)
+                filterStr += "year = " + year + " and ";
+            //month won't be set if no year exists
+            if (month != null)
+                filterStr += "month = '" + month + "' and ";
+            else if (monthList != null)
+            {
+                filterStr += "(";
+                for (int i = 0; i < monthList.Length - 1; i++)
+                {
+                    filterStr += "month = '" + monthList[i] + "' or ";
+                }
+                filterStr += "month = '" + monthList[monthList.Length - 1] + "') and ";
+            }
+            if (day > 0)
+                filterStr += "day = " + day + " and ";
+            
+
+            return filterStr;
+        }
+
+        public String generateItemFilter(Tuple<String, String, String> info)
+        {
+            String department = info.Item1;
+            String catagory = info.Item2;
+            String item = info.Item3;
+
+            String filterItem = "";
+            //set item filters
+            if (department != null)
+                filterItem += "department = '" + department + "' and ";
+            if (catagory != null)
+                filterItem += "catagory = '" + catagory + "' and ";
+            if (item != null)
+                filterItem += "item = '" + item + "' and ";
+
+            return filterItem;
+        }
+
+        public String generateLocationFilter(Tuple<String, String, String, String, String> info)
+        {
+            String country = info.Item1; 
+            String region = info.Item2; 
+            String province = info.Item3;
+            String city = info.Item4;
+            String store = info.Item5;
+
+            String filterLoc = "";
+
+            //set location filter
+            if (country != null)
+                filterLoc += "country = '" + country + "' and ";
+            if (region != null)
+                filterLoc += "region = '" + region + "' and ";
+            if (province != null)
+                filterLoc += "province = '" + province + "' and ";
+            if (city != null)
+                filterLoc += "city = '" + city + "' and ";
+            if (store != null)
+                filterLoc += "storename = '" + store + "' and ";
+
+            return filterLoc;
+        }
+
+
+        private Tuple<int, String, String[], int> getSelectedDateTree()
+        {
+            //tuple data
+            int year = 0;
             String month = null;
             String[] monthList = null;
-            String department = null, catagory = null, item = null;
-            String country = null, region = null, province = null, city = null, store = null;
+            int day = 0;
 
-            //Assigning Date
-            //Trace the parents of each selected node to get contextual details
-            TreeNode node = dateTree.SelectedNode;
             TypedNode type = (TypedNode)dateTree.SelectedNode.Tag;
             List<TypedNode> dateParents = type.getParents();
             foreach (TypedNode t in dateParents)
@@ -272,10 +400,15 @@ namespace WindowsFormsApplication1
                         break;
                 }
             }
+            return new Tuple<int, String, String[], int>(year, month, monthList, day);
+        }
 
-            //get the selected item details
-            
-            type = (TypedNode)productTree.SelectedNode.Tag;
+        private Tuple<String, String, String> getSelectedItemTree()
+        {
+            //tuple data
+            String department = null, catagory = null, item = null;
+
+            TypedNode type = (TypedNode)productTree.SelectedNode.Tag;
             List<TypedNode> itemParents = type.getParents();
             foreach (TypedNode t in itemParents)
             {
@@ -293,9 +426,16 @@ namespace WindowsFormsApplication1
                 }
             }
 
-            //get location
-            type = (TypedNode)locationTree.SelectedNode.Tag;
+            return new Tuple<String, String, String>(department, catagory, item);
+        }
+
+        private Tuple<String, String, String, String, String> getSelectedLocationTree()
+        {
+            String country = null, region = null, province = null, city = null, store = null;
+
+            TypedNode type = (TypedNode)locationTree.SelectedNode.Tag;
             List<TypedNode> locationParents = type.getParents();
+
             foreach (TypedNode t in locationParents)
             {
                 switch (t.getType())
@@ -318,88 +458,15 @@ namespace WindowsFormsApplication1
                 }
             }
 
-            String queryStr = "SELECT * from " + tableName + " where ";
-
-            //set time filter
-            queryStr += generateTimeFilter(year, month, monthList, day);
-            queryStr += generateItemFilter(department, catagory, item);
-            queryStr += generateLocationFilter(country, region, province, city, store);
-            queryStr = finalizeQuery(queryStr);
-
-            Console.WriteLine(queryStr);
-           
+            return new Tuple<String, String, String, String, String>(country, region, province, city, store);
         }
-
-        public String finalizeQuery(String query)
-        {
-            String newQuery = query;
-            String delim = " and ";
-            //remove trailing 'and'
-            if (newQuery.LastIndexOf(delim) == newQuery.Length - delim.Length)
-                newQuery = newQuery.Substring(0, newQuery.Length - delim.Length);
-                
-            newQuery += ";";
-            return newQuery;
-        }
-
-        public String generateTimeFilter(int year, String month, String[] monthList, int day)
-        {
-            String filterStr = "";
-            //set date filters
-            if (year > 0)
-                filterStr += "year = " + year + " and ";
-            //month won't be set if no year exists
-            if (month != null)
-                filterStr += "month = '" + month + "' and ";
-            else if (monthList != null)
-            {
-                filterStr += "(";
-                for (int i = 0; i < monthList.Length - 1; i++)
-                {
-                    filterStr += "month = '" + monthList[i] + "' or ";
-                }
-                filterStr += "month = '" + monthList[monthList.Length - 1] + "') and ";
-            }
-
-            return filterStr;
-        }
-
-        public String generateItemFilter(String department, String catagory, String item)
-        {
-            String filterItem = "";
-            //set item filters
-            if (department != null)
-                filterItem += "department = '" + department + "' and ";
-            if (catagory != null)
-                filterItem += "catagory = '" + catagory + "' and ";
-            if (item != null)
-                filterItem += "item = '" + item + "' and ";
-
-            return filterItem;
-        }
-
-        public String generateLocationFilter(String country, String region, String province, String city, String store)
-        {
-            String filterLoc = "";
-            //set location filter
-            if (country != null)
-                filterLoc += "country = '" + country + "' and ";
-            if (region != null)
-                filterLoc += "region = '" + region + "' and ";
-            if (province != null)
-                filterLoc += "province = '" + province + "' and ";
-            if (city != null)
-                filterLoc += "city = '" + city + "' and ";
-            if (store != null)
-                filterLoc += "store = '" + store + "' and ";
-
-            return filterLoc;
-        }
-
-
-
 
         private void dateTree_AfterSelect(object sender, TreeViewEventArgs e)
+        {
+
+        }
+
+        private void textBox2_TextChanged(object sender, EventArgs e)
         {
 
         }
