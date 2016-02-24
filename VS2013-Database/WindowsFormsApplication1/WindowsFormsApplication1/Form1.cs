@@ -204,23 +204,22 @@ namespace WindowsFormsApplication1
             locationTree.SelectedNode = firstLoc;
             dateTree.SelectedNode = firstDate;
             productTree.SelectedNode = firstItem;
-            //TreeNode test = locationTree.SelectedNode;
-            //Console.Write(test.Text);
-            //productTree.Nodes.Add(makeItemTree());
-            //dateTree.Nodes.Add(makeDateTree());
-            chart1.Series.Add("test");
-            chart1.Series["test"].ChartType = SeriesChartType.Bar;
-            chart1.Series["test"].Points.AddXY(0, 20);
 
-            chart1.Series.Add("test2");
-            chart1.Series["test2"].ChartType = SeriesChartType.Bar;
-            chart1.Series["test2"].Points.AddXY(1, 30);
+            
 
-            chart1.Series.Add("test3");
-            chart1.Series["test3"].ChartType = SeriesChartType.Bar;
-            chart1.Series["test3"].Points.AddXY(1, 5);
+        }
+
+        private void logQuery(String results) {
+            var dateInfo = getSelectedDateTree();
+            var itemInfo = getSelectedItemTree();
+            var locInfo = getSelectedLocationTree();
 
 
+            String output = "\n---" + 
+                results + "\n|" + timeInfoString(dateInfo) +
+                "\n|" + itemInfoString(itemInfo) +
+                "\n---";
+            richTextBox1.Text += output;
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -230,8 +229,9 @@ namespace WindowsFormsApplication1
             {
                 //for each row of the result (only one for this query),
                 //populate some text boxes
-                textBox1.Text = data[0].ToString();
-                textBox2.Text = data[1].ToString();
+                String unitsSold = data[0].ToString();
+                String dollars = data[1].ToString();
+                logQuery("Dollars In: " + dollars + " Units Out: " + unitsSold);
             });
 
         }
@@ -308,7 +308,7 @@ namespace WindowsFormsApplication1
             else if (monthList != null)
             {
                 filterStr += "(";
-                for (int i = 0; i < monthList.Length - 1; i++)
+                for (int i = 1; i < monthList.Length - 1; i++)
                 {
                     filterStr += "month = '" + monthList[i] + "' or ";
                 }
@@ -391,9 +391,11 @@ namespace WindowsFormsApplication1
 
                         TreeNode reference = t.getRefNode();
                         //hree months in a quarter, pretty static
-                        monthList = new String[3];
-                        for (int i = 0; i < 3; i++)
-                            monthList[i] = reference.Nodes[i].Text;
+                        monthList = new String[4];
+                        for (int i = 1; i < 4; i++)
+                            monthList[i] = reference.Nodes[i - 1].Text;
+                        //store quarter name in pos 0
+                        monthList[0] = t.getName();
                         break;
                     case TypedNode.TYPES.DAY:
                         day = Int32.Parse(t.getName());
@@ -401,6 +403,30 @@ namespace WindowsFormsApplication1
                 }
             }
             return new Tuple<int, String, String[], int>(year, month, monthList, day);
+        }
+
+        public String timeInfoString(Tuple<int, String, String[], int> info)
+        {
+            int year = info.Item1;
+            if (year == 0)
+                return "All Time";
+
+            String output = "(" + year + "/";
+
+            String month = info.Item2;
+            String[] monthList = info.Item3;
+
+            if (month != null)
+                output += month + "/";
+            else if (monthList != null)
+                output += monthList[0] + "/";
+
+            int day = info.Item4;
+            if (day > 0)
+                output += day;
+
+            output += ")";
+            return output;
         }
 
         private Tuple<String, String, String> getSelectedItemTree()
@@ -427,6 +453,26 @@ namespace WindowsFormsApplication1
             }
 
             return new Tuple<String, String, String>(department, catagory, item);
+        }
+
+        public String itemInfoString( Tuple<String, String, String> info)
+        {
+            String output = "";
+
+            String item = info.Item3;
+            if (item != null)
+                output += "Item: " + item;
+
+            String dept = info.Item1;
+            if (dept != null)
+                output += " of " + dept + " department ";
+
+            String catagory = info.Item2;
+            if (catagory != null)
+                output += " for " + catagory + " catagory ";
+
+
+            return output;
         }
 
         private Tuple<String, String, String, String, String> getSelectedLocationTree()
@@ -467,6 +513,11 @@ namespace WindowsFormsApplication1
         }
 
         private void textBox2_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
 
         }
