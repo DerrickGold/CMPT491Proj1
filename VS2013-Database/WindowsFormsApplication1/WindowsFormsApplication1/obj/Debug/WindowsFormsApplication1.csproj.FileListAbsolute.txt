@@ -1,0 +1,9 @@
+C:\Users\curto99\Desktop\CMPT491Proj1-master\VS2013-Database\WindowsFormsApplication1\WindowsFormsApplication1\bin\Debug\WindowsFormsApplication1.exe.config
+C:\Users\curto99\Desktop\CMPT491Proj1-master\VS2013-Database\WindowsFormsApplication1\WindowsFormsApplication1\bin\Debug\WindowsFormsApplication1.exe
+C:\Users\curto99\Desktop\CMPT491Proj1-master\VS2013-Database\WindowsFormsApplication1\WindowsFormsApplication1\bin\Debug\WindowsFormsApplication1.pdb
+C:\Users\curto99\Desktop\CMPT491Proj1-master\VS2013-Database\WindowsFormsApplication1\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.csprojResolveAssemblyReference.cache
+C:\Users\curto99\Desktop\CMPT491Proj1-master\VS2013-Database\WindowsFormsApplication1\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.Form1.resources
+C:\Users\curto99\Desktop\CMPT491Proj1-master\VS2013-Database\WindowsFormsApplication1\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.Properties.Resources.resources
+C:\Users\curto99\Desktop\CMPT491Proj1-master\VS2013-Database\WindowsFormsApplication1\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.csproj.GenerateResource.Cache
+C:\Users\curto99\Desktop\CMPT491Proj1-master\VS2013-Database\WindowsFormsApplication1\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.exe
+C:\Users\curto99\Desktop\CMPT491Proj1-master\VS2013-Database\WindowsFormsApplication1\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.pdb

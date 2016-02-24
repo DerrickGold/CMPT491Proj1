@@ -164,12 +164,12 @@ namespace WindowsFormsApplication1
                 TreeNode quarter2 = makeTypedNode("Quarter 2", TypedNode.TYPES.QUARTER);
                 quarter2.Nodes.Add(makeTypedNode("Apr", TypedNode.TYPES.MONTH));
                 quarter2.Nodes.Add(makeTypedNode("May", TypedNode.TYPES.MONTH));
-                quarter2.Nodes.Add(makeTypedNode("June", TypedNode.TYPES.MONTH));
+                quarter2.Nodes.Add(makeTypedNode("Jun", TypedNode.TYPES.MONTH));
 
                 TreeNode quarter3 = makeTypedNode("Quarter 3", TypedNode.TYPES.QUARTER);
-                quarter3.Nodes.Add(makeTypedNode("July", TypedNode.TYPES.MONTH));
+                quarter3.Nodes.Add(makeTypedNode("Jul", TypedNode.TYPES.MONTH));
                 quarter3.Nodes.Add(makeTypedNode("Aug", TypedNode.TYPES.MONTH));
-                quarter3.Nodes.Add(makeTypedNode("Sept", TypedNode.TYPES.MONTH));
+                quarter3.Nodes.Add(makeTypedNode("Sep", TypedNode.TYPES.MONTH));
 
                 TreeNode quarter4 = makeTypedNode("Quarter 4", TypedNode.TYPES.QUARTER);
                 quarter4.Nodes.Add(makeTypedNode("Oct", TypedNode.TYPES.MONTH));
@@ -204,7 +204,7 @@ namespace WindowsFormsApplication1
 
             try
             {
-                theDB = new DatabaseShiz("COMPSCI-PC", "CMPT491-Warehouse", "compsci");
+                theDB = new DatabaseShiz("CURTIS_PC\\SQLEXPRESS", "CMPT491-Warehouse", "Curtis");
                 MessageBox.Show("Connected to database.");
             }
             catch (Exception e)
@@ -213,10 +213,19 @@ namespace WindowsFormsApplication1
                 Application.Exit();
             }
 
-            
-            locationTree.Nodes.Add(makeLocationTree());
-            productTree.Nodes.Add(makeItemTree());
-            dateTree.Nodes.Add(makeDateTree());
+            TreeNode firstLoc = makeLocationTree();
+            TreeNode firstDate = makeDateTree();
+            TreeNode firstItem = makeItemTree();
+            locationTree.Nodes.Add(firstLoc);
+            dateTree.Nodes.Add(firstDate);
+            productTree.Nodes.Add(firstItem);
+            locationTree.SelectedNode = firstLoc;
+            dateTree.SelectedNode = firstDate;
+            productTree.SelectedNode = firstItem;
+            //TreeNode test = locationTree.SelectedNode;
+            //Console.Write(test.Text);
+            //productTree.Nodes.Add(makeItemTree());
+            //dateTree.Nodes.Add(makeDateTree());
             chart1.Series.Add("test");
             chart1.Series["test"].ChartType = SeriesChartType.Bar;
             chart1.Series["test"].Points.AddXY(0, 20);
@@ -238,6 +247,104 @@ namespace WindowsFormsApplication1
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            //Assigning Date
+            int year = 0;
+            string month;
+            TreeNode node = dateTree.SelectedNode;
+            if (node.Text.Length == 3){
+                month = node.Text;
+                year = Int32.Parse(node.Parent.Parent.Text);
+            }
+            if (node.Text.Length == 4)
+            {
+                year = Int32.Parse(node.Text);
+            }
+            if (node.Text.Length == 9){
+                if (node.Text == "Quarter 1")
+                {
+                    month = "Jan Feb Mar";
+                }
+                if (node.Text == "Quarter 2")
+                {
+                    month = "Apr May Jun";
+                }
+                if (node.Text == "Quarter 3")
+                {
+                    month = "Jul Aug Sep";
+                }
+                if (node.Text == "Quarter 4")
+                {
+                    month = "Oct Nov Dec";
+                }
+                year = Int32.Parse(node.Parent.Text);
+            }
+            
+            //assigning Items
+            string department = "no";
+            string cat = "no";
+            string item = "no";
+            TreeNode node1 = productTree.SelectedNode;
+            if (node1.Level == 1)
+            {
+                node1.Text = department;
+            }
+            if (node1.Level == 2)
+            {
+                node1.Text = cat;
+                node1.Parent.Text = department;
+            } 
+            if (node1.Level == 3)
+            {
+                node1.Text = item;
+                node1.Parent.Text = cat;
+                node1.Parent.Parent.Text = department;
+            }
+            string country = "no";
+            string region = "no";
+            string prov = "no";
+            string city = "no";
+            string store = "no";
+            TreeNode node2 = productTree.SelectedNode;
+            if (node2.Level == 1)
+            {
+                country = node2.Text;
+            }
+            if (node2.Level == 2)
+            {
+                region = node2.Text;
+                country = node2.Parent.Text;
+            }
+            if (node2.Level == 3)
+            {
+                prov = node2.Text;
+                region = node2.Parent.Text;
+                country = node2.Parent.Parent.Text;
+            }
+            if (node2.Level == 4)
+            {
+                city = node2.Text;
+                prov = node2.Parent.Text;
+                region = node2.Parent.Parent.Text;
+                country = node2.Parent.Parent.Parent.Text;
+            }
+            if (node2.Level == 5)
+            {
+                store = node2.Text;
+                city = node2.Parent.Text;
+                prov = node2.Parent.Parent.Text;
+                region = node2.Parent.Parent.Parent.Text;
+                country = node2.Parent.Parent.Parent.Parent.Text;
+            }
+
+        }
+
+        private void dateTree_AfterSelect(object sender, TreeViewEventArgs e)
         {
 
         }

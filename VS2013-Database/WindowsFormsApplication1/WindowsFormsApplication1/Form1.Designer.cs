@@ -28,20 +28,15 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea3 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend3 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
             this.locationTree = new System.Windows.Forms.TreeView();
             this.dateTree = new System.Windows.Forms.TreeView();
             this.productTree = new System.Windows.Forms.TreeView();
-            this.dateTimePicker1 = new System.Windows.Forms.DateTimePicker();
-            this.dateTimePicker2 = new System.Windows.Forms.DateTimePicker();
             this.button1 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
-            this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this.textBox1 = new System.Windows.Forms.TextBox();
@@ -66,6 +61,7 @@
             this.dateTree.Name = "dateTree";
             this.dateTree.Size = new System.Drawing.Size(173, 264);
             this.dateTree.TabIndex = 2;
+            this.dateTree.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.dateTree_AfterSelect);
             // 
             // productTree
             // 
@@ -75,46 +71,15 @@
             this.productTree.Size = new System.Drawing.Size(168, 264);
             this.productTree.TabIndex = 3;
             // 
-            // dateTimePicker1
-            // 
-            this.dateTimePicker1.Location = new System.Drawing.Point(574, 200);
-            this.dateTimePicker1.Name = "dateTimePicker1";
-            this.dateTimePicker1.Size = new System.Drawing.Size(148, 20);
-            this.dateTimePicker1.TabIndex = 4;
-            // 
-            // dateTimePicker2
-            // 
-            this.dateTimePicker2.Location = new System.Drawing.Point(574, 264);
-            this.dateTimePicker2.Name = "dateTimePicker2";
-            this.dateTimePicker2.Size = new System.Drawing.Size(148, 20);
-            this.dateTimePicker2.TabIndex = 5;
-            // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(574, 49);
+            this.button1.Location = new System.Drawing.Point(574, 280);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(148, 33);
             this.button1.TabIndex = 11;
             this.button1.Text = "Report Fixed Dates";
             this.button1.UseVisualStyleBackColor = true;
-            // 
-            // button2
-            // 
-            this.button2.Location = new System.Drawing.Point(574, 290);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(148, 23);
-            this.button2.TabIndex = 12;
-            this.button2.Text = "Report Flex Dates";
-            this.button2.UseVisualStyleBackColor = true;
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(574, 248);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(49, 13);
-            this.label1.TabIndex = 13;
-            this.label1.Text = "EndDate";
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // label2
             // 
@@ -143,15 +108,6 @@
             this.label4.TabIndex = 16;
             this.label4.Text = "Sales in Dollars";
             // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(574, 184);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(55, 13);
-            this.label5.TabIndex = 17;
-            this.label5.Text = "Start Date";
-            // 
             // label6
             // 
             this.label6.AutoSize = true;
@@ -174,6 +130,7 @@
             // 
             this.textBox1.Location = new System.Drawing.Point(27, 434);
             this.textBox1.Name = "textBox1";
+            this.textBox1.ReadOnly = true;
             this.textBox1.Size = new System.Drawing.Size(133, 20);
             this.textBox1.TabIndex = 20;
             // 
@@ -181,15 +138,16 @@
             // 
             this.textBox2.Location = new System.Drawing.Point(27, 357);
             this.textBox2.Name = "textBox2";
+            this.textBox2.ReadOnly = true;
             this.textBox2.Size = new System.Drawing.Size(133, 20);
             this.textBox2.TabIndex = 21;
             // 
             // chart1
             // 
-            chartArea3.Name = "ChartArea1";
-            this.chart1.ChartAreas.Add(chartArea3);
-            legend3.Name = "Legend1";
-            this.chart1.Legends.Add(legend3);
+            chartArea2.Name = "ChartArea1";
+            this.chart1.ChartAreas.Add(chartArea2);
+            legend2.Name = "Legend1";
+            this.chart1.Legends.Add(legend2);
             this.chart1.Location = new System.Drawing.Point(225, 357);
             this.chart1.Name = "chart1";
             this.chart1.Size = new System.Drawing.Size(295, 204);
@@ -206,15 +164,10 @@
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.label6);
-            this.Controls.Add(this.label5);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
-            this.Controls.Add(this.label1);
-            this.Controls.Add(this.button2);
             this.Controls.Add(this.button1);
-            this.Controls.Add(this.dateTimePicker2);
-            this.Controls.Add(this.dateTimePicker1);
             this.Controls.Add(this.productTree);
             this.Controls.Add(this.dateTree);
             this.Controls.Add(this.locationTree);
@@ -231,15 +184,10 @@
         private System.Windows.Forms.TreeView locationTree;
         private System.Windows.Forms.TreeView dateTree;
         private System.Windows.Forms.TreeView productTree;
-        private System.Windows.Forms.DateTimePicker dateTimePicker1;
-        private System.Windows.Forms.DateTimePicker dateTimePicker2;
         private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.TextBox textBox1;
