@@ -237,7 +237,8 @@ namespace WindowsFormsApplication1
         {
             //query parameters
             int year = 0, day = 0;
-            String month = "";
+            String month = null;
+            String[] monthList = null;
             String department = null, catagory = null, item = null;
             String country = null, region = null, province = null, city = null, store = null;
 
@@ -258,19 +259,19 @@ namespace WindowsFormsApplication1
                         break;
                     case TypedNode.TYPES.QUARTER:
                         //only add quarter months if month is not set
-                        if (month.Length > 0) break;
+                        if (month != null) break;
 
                         TreeNode reference = t.getRefNode();
                         //hree months in a quarter, pretty static
-                        month = "" + reference.Nodes[0].Text + " " + reference.Nodes[1].Text + " " 
-                            + reference.Nodes[2].Text;
+                        monthList = new String[3];
+                        for (int i = 0; i < 3; i++)
+                            monthList[i] = reference.Nodes[i].Text;
                         break;
                     case TypedNode.TYPES.DAY:
                         day = Int32.Parse(t.getName());
                         break;
                 }
             }
-            Console.WriteLine("Year: " + year + " Months: " + month);
 
             //get the selected item details
             
@@ -291,8 +292,6 @@ namespace WindowsFormsApplication1
                         break;
                 }
             }
-            Console.WriteLine("Dept.: " + department + " Catagory: " + catagory + " Item: " + item);
-
 
             //get location
             type = (TypedNode)locationTree.SelectedNode.Tag;
@@ -318,9 +317,87 @@ namespace WindowsFormsApplication1
                         break;
                 }
             }
-            Console.WriteLine("Country: " + country + " Region: " + region + " Province: " + province
-                + " City: " + city + " Store: " + store);
+
+            String queryStr = "SELECT * from " + tableName + " where ";
+
+            //set time filter
+            queryStr += generateTimeFilter(year, month, monthList, day);
+            queryStr += generateItemFilter(department, catagory, item);
+            queryStr += generateLocationFilter(country, region, province, city, store);
+            queryStr = finalizeQuery(queryStr);
+
+            Console.WriteLine(queryStr);
+           
         }
+
+        public String finalizeQuery(String query)
+        {
+            String newQuery = query;
+            String delim = " and ";
+            //remove trailing 'and'
+            if (newQuery.LastIndexOf(delim) == newQuery.Length - delim.Length)
+                newQuery = newQuery.Substring(0, newQuery.Length - delim.Length);
+                
+            newQuery += ";";
+            return newQuery;
+        }
+
+        public String generateTimeFilter(int year, String month, String[] monthList, int day)
+        {
+            String filterStr = "";
+            //set date filters
+            if (year > 0)
+                filterStr += "year = " + year + " and ";
+            //month won't be set if no year exists
+            if (month != null)
+                filterStr += "month = '" + month + "' and ";
+            else if (monthList != null)
+            {
+                filterStr += "(";
+                for (int i = 0; i < monthList.Length - 1; i++)
+                {
+                    filterStr += "month = '" + monthList[i] + "' or ";
+                }
+                filterStr += "month = '" + monthList[monthList.Length - 1] + "') and ";
+            }
+
+            return filterStr;
+        }
+
+        public String generateItemFilter(String department, String catagory, String item)
+        {
+            String filterItem = "";
+            //set item filters
+            if (department != null)
+                filterItem += "department = '" + department + "' and ";
+            if (catagory != null)
+                filterItem += "catagory = '" + catagory + "' and ";
+            if (item != null)
+                filterItem += "item = '" + item + "' and ";
+
+            return filterItem;
+        }
+
+        public String generateLocationFilter(String country, String region, String province, String city, String store)
+        {
+            String filterLoc = "";
+            //set location filter
+            if (country != null)
+                filterLoc += "country = '" + country + "' and ";
+            if (region != null)
+                filterLoc += "region = '" + region + "' and ";
+            if (province != null)
+                filterLoc += "province = '" + province + "' and ";
+            if (city != null)
+                filterLoc += "city = '" + city + "' and ";
+            if (store != null)
+                filterLoc += "store = '" + store + "' and ";
+
+            return filterLoc;
+        }
+
+
+
 
         private void dateTree_AfterSelect(object sender, TreeViewEventArgs e)
         {
